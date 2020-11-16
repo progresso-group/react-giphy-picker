@@ -1,3 +1,5 @@
+const path = require('path');
+
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
@@ -14,6 +16,13 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({ title: 'react infinite loader example', template: './example/index.html' })
+    new HtmlWebpackPlugin({ title: 'react giphy picker example', template: './example/index.html' })
   ],
+  devServer: {
+    contentBase: path.join(__dirname),
+    hot: true,
+    port: 4000,
+    inline: true,
+    clientLogLevel: 'trace'
+  }
 }

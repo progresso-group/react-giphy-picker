@@ -1,12 +1,15 @@
 {
-  "name": "react-giphy-picker",
+  "name": "react-giphy-picker-https",
   "version": "1.1.1",
-  "description": "A react gif picker using giphy API",
+  "description": "A react gif picker using giphy API over https",
   "main": "lib/Picker.js",
   "author": "Steven Iseki <stevenisekimartin@gmail.com>",
+  "contributors": [
+    "Michael Hilus <m.hilus@progresso-group.de> (https://www.progresso-group.de)"
+  ],
   "scripts": {
     "build": "babel src --out-dir lib",
-    "dev": "webpack-dev-server --mode=development --port 3000 --inline --hot --config example/webpack.config",
+    "dev": "webpack serve --mode=development --config example/webpack.config.js",
     "test": "jest"
   },
   "repository": {
@@ -19,26 +22,26 @@
   },
   "dependencies": {
     "prop-types": "^15.6.0",
-    "styled-components": "^4.1.3",
+    "styled-components": "^5.2.1",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.2.3",
-    "@babel/core": "7.3.3",
-    "@babel/preset-env": "7.3.1",
-    "@babel/preset-react": "7.0.0",
-    "babel-jest": "^24.7.1",
-    "babel-loader": "8.0.5",
-    "enzyme": "3.9.0",
+    "@babel/core": "7.12.3",
+    "@babel/preset-env": "7.12.1",
+    "@babel/preset-react": "7.12.5",
+    "babel-jest": "^26.6.3",
+    "babel-loader": "8.2.1",
+    "enzyme": "3.11.0",
     "enzyme-adapter-react-16": "^1.9.1",
-    "html-webpack-plugin": "3.2.0",
-    "jest": "^24.7.1",
-    "jsdom": "13.2.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "webpack": "4.29.4",
-    "webpack-cli": "3.2.3",
-    "webpack-dev-server": "3.1.14"
+    "html-webpack-plugin": "4.5.0",
+    "jest": "^26.6.3",
+    "jsdom": "16.4.0",
+    "react": "^16.14.0",
+    "react-dom": "^16.14.0",
+    "webpack": "4.44.2",
+    "webpack-cli": "4.2.0",
+    "webpack-dev-server": "3.11.0"
   },
   "keywords": [
     "react",
