@@ -18,7 +18,7 @@ import Picker from '../Picker'
 test('Picker renders correctly and matches snapshot', () => {
   const handleSelected = jest.fn()
   const component = renderer.create(
-    <Picker onSelected={handleSelected} />
+    <Picker apiKey="" onSelected={handleSelected} />
   )
 
   let tree = component.toJSON()
@@ -29,7 +29,7 @@ test('Picker renders the correct elements and props', () => {
   const handleSelected = jest.fn()
 
   const wrapper = shallow(
-    <Picker onSelected={handleSelected} />
+    <Picker apiKey="" onSelected={handleSelected} />
   )
 
   /* mock and return gifs */
@@ -41,7 +41,7 @@ test('Picker renders the correct elements and props', () => {
   // expect(handleSelected).toBeCalled();
 
   expect(wrapper.find(`[name="giphy-search"]`).length).toEqual(1)
-  expect(wrapper.find(`[placeholder="Search for gifs"]`).length).toEqual(1)
+  expect(wrapper.find(`[placeholder="Search for GIFs"]`).length).toEqual(1)
 
   // console.log(wrapper.debug())
 })
