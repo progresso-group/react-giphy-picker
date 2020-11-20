@@ -109,6 +109,7 @@ export default class extends Component {
             autoCapitalize="none"
             autoComplete="off"
             autoCorrect="off"
+            spellCheck="false"
             onChange={this.onSearchChange.bind(this)}
             value={this.state.searchValue}
             onKeyDown={this.onKeyDown.bind(this)}
