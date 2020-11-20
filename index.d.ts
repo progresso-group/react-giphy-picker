@@ -20,7 +20,7 @@ interface WebPInfo extends SizeInfo {
     webp_size: number;
 }
 
-interface Infos {
+export interface Gif {
     '480w_still': GifInfo;
     downsized: GifInfo;
     downsized_large: GifInfo;
@@ -53,7 +53,7 @@ interface Infos {
 
 interface PickerProps {
     apiKey: string;
-    onSelected: (infos: Infos) => void;
+    onSelected: (gif: Gif) => void;
     visible: boolean;
     modal: boolean;
     style?: React.CSSProperties;
