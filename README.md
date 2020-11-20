@@ -1,6 +1,6 @@
 # react-giphy-picker-https
 
-[![npm version](https://badge.fury.io/js/react-giphy-picker.svg)](https://badge.fury.io/js/react-giphy-picker)
+[![npm version](https://badge.fury.io/js/%40progresso%2Freact-giphy-picker-https.svg)](https://badge.fury.io/js/%40progresso%2Freact-giphy-picker-https)
 
 ![](https://raw.githubusercontent.com/progresso-group/react-giphy-picker/master/example/preview.gif)
 
