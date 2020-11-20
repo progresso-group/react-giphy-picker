@@ -1,21 +1,19 @@
-# react-giphy-picker
+# react-giphy-picker-https
 
 [![npm version](https://badge.fury.io/js/react-giphy-picker.svg)](https://badge.fury.io/js/react-giphy-picker)
 
-![](https://raw.githubusercontent.com/StevenIseki/react-giphy-picker/master/example/screenshot.gif)
+![](https://raw.githubusercontent.com/progresso-group/react-giphy-picker/master/example/preview.gif)
 
-react-giphy-picker is a simple gif picker component using giphy API
-
-On select it returns a Gif object in the format specified for an image from Giphy's search API [giphy sample-response-search](https://github.com/Giphy/GiphyAPI#sample-response-search)
+react-giphy-picker-https is a simple gif picker component using giphy API over https.
 
 ## Install
 
-`npm install react-giphy-picker --save`
+`yarn add @progresso/react-giphy-picker-https`
 
 ## Usage basic
 
 ```jsx
-import Picker from 'react-giphy-picker'
+import Picker from 'react-giphy-picker-https'
 import ReactDOM from 'react-dom'
 import React, { Component, PropTypes } from 'react'
 
@@ -27,7 +25,7 @@ class TestComponent extends Component {
   render () {
     return (
       <div>
-        <Picker onSelected={this.log.bind(this)} />
+        <Picker apiKey="your-giphy-api-key" onSelected={this.log.bind(this)} />
       </div>
     )
   }
@@ -41,16 +39,26 @@ ReactDOM.render(
 
 ## Props
 
+### `apiKey` (required)
+Your giphy api key, see [API Quickstart Guide](https://developers.giphy.com/docs/api) on [developers.giphy.com](https://developers.giphy.com/).
+
 #### `onSelected` (required)
-Handler returns the emoji character selected from the emoji picker.
+Handles a gif selection and provides the selected gif as a [Gif Object](https://developers.giphy.com/docs/api/schema#gif-object).
 
 #### `visible`
-Opacity to show or hide the picker. Defaults to `true`.
+Set to `true` to make the component visible.
 
 #### `modal`
-If you want the emoji picker to be a modal.
-`true` will set the wrapper as `position: absolute`.
-Or `false`, which is the default will be `position: static`.
+Set to `true`, if you want the component to be displayed as a floating layer. It will set the component `position: absolute` and add a box shadow.
+
+#### `style`
+A `React.CSSProperties` object that appies to the outer component shape.
+
+#### `searchBoxStyle`
+A `React.CSSProperties` object that applies to the component's search box.
+
+#### `gifStyle`
+A `React.CSSProperties` object that applies to each rendered gif image within the component.
 
 ## Styles
 Uses styled-components 💅 for the base styling.
@@ -65,13 +73,6 @@ Uses styled-components 💅 for the base styling.
 ## Build
     yarn
     yarn build
-
-## Publish
-    npm login
-    npm version patch
-    git add -A
-    git push origin master
-    npm publish
 
 ## License
 
