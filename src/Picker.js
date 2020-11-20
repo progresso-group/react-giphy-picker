@@ -144,7 +144,7 @@ const GiphyPickerWrapper = styled.div`
   flex-direction: column;
   position: ${props => props.modal ? 'absolute' : 'static'};
   opacity: ${props => props.visible ? 1 : 0};
-  pointer-events: ${props => props.visible ? 'all' : 'none'};
+  pointer-events: ${props => props.visible ? 'inherit' : 'none'};
   transition: opacity 300ms linear;
   border-radius: 2px;
   background: white;
