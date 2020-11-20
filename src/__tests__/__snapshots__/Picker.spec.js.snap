@@ -21,6 +21,7 @@ exports[`Picker renders correctly and matches snapshot 1`] = `
       onChange={[Function]}
       onKeyDown={[Function]}
       placeholder="Search for GIFs"
+      spellCheck="false"
       style={Object {}}
       type="text"
       value=""
