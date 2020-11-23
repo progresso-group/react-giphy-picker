@@ -190,7 +190,6 @@ export default class extends Component {
                     <Giphy
                       className="giphy-gif"
                       style={{ marginLeft: `${-g.cutValue}px` }}
-                      onClick={() => {this.onGiphySelect(g)}}
                       src={gif.url}
                     />
                   </GiphyContainer>
