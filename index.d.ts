@@ -53,6 +53,7 @@ export interface Gif {
 
 interface PickerProps {
     apiKey: string;
+    width: number;
     onSelected: (gif: Gif) => void;
     visible: boolean;
     modal: boolean;
