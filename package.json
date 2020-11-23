@@ -1,6 +1,6 @@
 {
   "name": "@progresso/react-giphy-picker-https",
-  "version": "1.3.3",
+  "version": "1.3.4",
   "description": "A react gif picker using giphy API over https",
   "main": "lib/Picker.js",
   "types": "index.d.ts",
