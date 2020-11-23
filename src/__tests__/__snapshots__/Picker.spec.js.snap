@@ -16,7 +16,7 @@ exports[`Picker renders correctly and matches snapshot 1`] = `
       autoCapitalize="none"
       autoComplete="off"
       autoCorrect="off"
-      className="sc-eCssSg cnnnnc"
+      className="sc-jSgupP ewerep"
       name="giphy-search"
       onChange={[Function]}
       onKeyDown={[Function]}
@@ -27,7 +27,7 @@ exports[`Picker renders correctly and matches snapshot 1`] = `
       value=""
     />
     <div
-      className="sc-dlfnbm dsrysy"
+      className="sc-dlfnbm krOWSC"
     />
   </div>
 </div>

@@ -3,6 +3,9 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import 'whatwg-fetch'
 
+
+let nextSearchRequest = new Date();
+
 export default class extends Component {
   constructor(props) {
     super (props)
@@ -23,6 +26,7 @@ export default class extends Component {
       apiKey: PropTypes.string.isRequired,
       onSelected: PropTypes.func.isRequired,
       visible: PropTypes.bool,
+      width: PropTypes.number,
       modal: PropTypes.bool,
       style: PropTypes.object,
       searchBoxStyle: PropTypes.object,
@@ -36,7 +40,8 @@ export default class extends Component {
     return {
       visible: true,
       modal: false,
-      style: { width: '250px' },
+      style: { },
+      width: 250,
       searchBoxStyle: {},
       gifStyle: {},
       placeholderText: 'Search for GIFs'
@@ -53,29 +58,76 @@ export default class extends Component {
       return response.json()
     }).then((response) => {
       let gifs = response.data.map((g, i) => {return g.images})
+      gifs = this.orderToFit(gifs);
       this.setState({gifs})
-    })
+    });
   }
 
   searchGifs() {
     const { apiKey } = this.props;
     const { giphySearchUrl, searchValue } = this.state
 
+    const delay = 1000;
+
     if (searchValue.length < 1) {
       return;
     }
 
-    let url = `${giphySearchUrl}${apiKey}&q=${searchValue.replace(' ', '+')}`;
-    this.setState({ gifs: [] });
+    const url = `${giphySearchUrl}${apiKey}&q=${searchValue.replace(' ', '+')}`;
+    
+    nextSearchRequest = Date.now() + delay;
+    setTimeout(() => {
+      if (Date.now() >= nextSearchRequest) {
+        this.setState({ gifs: [] });
+        fetch(url, {
+          method: 'get'
+        }).then((response) => {
+          return response.json()
+        }).then((response) => {
+          let gifs = response.data.map((g, i) => {return g.images});
+          gifs = this.orderToFit(gifs);
+          this.setState({gifs})
+        });
+      }
+    }, delay);
+  }
 
-    fetch(url, {
-      method: 'get'
-    }).then((response) => {
-      return response.json()
-    }).then((response) => {
-      let gifs = response.data.map((g, i) => {return g.images})
-      this.setState({gifs})
-    })
+  orderToFit(gifs) {
+    let { width } = this.props;
+    width -= 12; // padding
+    width -= 20; // scrollbar
+
+    const gifElements = gifs.length;
+    gifs = gifs.sort((a, b) => a.fixed_height.width < b.fixed_height.width ? -1 : 1);
+
+    const sortedGifs = [];
+
+    const addGif = (gif) => {
+      sortedGifs.push(gif);
+      gifs = gifs.filter(g => g !== gif);
+    };
+
+    let currentWidth = 0;
+    let currentLine = 0;
+    for (let i=0; i<gifElements; i++) {
+      let nextGif = gifs[0];
+      nextGif.line = currentLine;
+      nextGif.cutValue = 0;
+      addGif(nextGif);
+      currentWidth+= nextGif.fixed_height.width / 2 + 4;
+
+      if (currentWidth > width) {
+        const remainingWidth = currentWidth - width;
+        const gifsInLine = sortedGifs.filter(g => g.line === currentLine);
+        const cutValue = remainingWidth / gifsInLine.length / 2;
+        gifsInLine.forEach(g => { g.cutValue = cutValue });
+
+        currentLine++;
+        currentWidth = 0;
+      }
+    }
+
+    return sortedGifs;
   }
 
   onGiphySelect (gif) {
@@ -100,13 +152,15 @@ export default class extends Component {
 
   render() {
     const { gifs } = this.state
-    const { visible, modal, style, searchBoxStyle, gifStyle, placeholderText, scrollComponent } = this.props
+    const { visible, modal, style, width, searchBoxStyle, gifStyle, placeholderText, scrollComponent } = this.props
 
     const Scroller = scrollComponent ? scrollComponent : GiphyWrapper;
 
+    const gifHeight = gifStyle ? gifStyle.height ? gifStyle.height : 100 : 100;
+
     return (
       <Wrapper>
-        <GiphyPickerWrapper visible={visible} modal={modal} style={style}>
+        <GiphyPickerWrapper visible={visible} modal={modal} style={{...style, width: `${width}px`}}>
           <Input
             name="giphy-search"
             type="text"
@@ -121,15 +175,26 @@ export default class extends Component {
           <Scroller>
             {
               gifs.map((g, i) => {
-                let gifUrl = g.fixed_height.url
+                const gif = g.fixed_height;
+                const height = gifHeight;
+                let gifWidth = gifHeight / gif.height * gif.width;
+                gifWidth -= (g.cutValue * 2);
+
                 return (
-                  <Giphy
-                    className="giphy-gif"
-                    style={gifStyle}
+                  <GiphyContainer
+                    className="giphy-container-gif"
+                    style={{...gifStyle, width: gifWidth, height: height, backgroundColor: '#cccccc'}}
                     key={i}
-                    src={gifUrl}
-                    onClick={() => {this.onGiphySelect(g)}} />
-                )
+                    onClick={() => {this.onGiphySelect(g)}}
+                  >
+                    <Giphy
+                      className="giphy-gif"
+                      style={{ marginLeft: `${-g.cutValue}px` }}
+                      onClick={() => {this.onGiphySelect(g)}}
+                      src={gif.url}
+                    />
+                  </GiphyContainer>
+                );
               })
             }
           </Scroller>
@@ -165,16 +230,23 @@ const GiphyWrapper = styled.div`
   align-content: stretch;
   justify-content: center;
   padding-left: 8px;
-  padding-right: 8px;
+  padding-right: 4px;
   overflow-y: auto;
 `
 
-const Giphy = styled.img`
+const GiphyContainer = styled.div`
   cursor: pointer;
   justify-content: center;
   align-items: center;
   margin-bottom: 4px;
   margin-right: 4px;
+  height: 100px;
+  box-sizing: border-box;
+  overflow: hidden;
+`
+
+const Giphy = styled.img`
+  cursor: pointer;
   height: 100px;
   box-sizing: border-box;
 `
