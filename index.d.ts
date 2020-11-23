@@ -60,6 +60,7 @@ interface PickerProps {
     searchBoxStyle?: React.CSSProperties;
     gifStyle?: React.CSSProperties;
     placeholderText?: string;
+    scrollComponent?: (props: T) => React.Component<T>;
 }
 
 declare class Picker extends React.Component<PickerProps> {

@@ -27,7 +27,8 @@ export default class extends Component {
       style: PropTypes.object,
       searchBoxStyle: PropTypes.object,
       gifStyle: PropTypes.object,
-      placeholderText: PropTypes.string
+      placeholderText: PropTypes.string,
+      scrollComponent: PropTypes.func
     }
   }
 
@@ -98,8 +99,11 @@ export default class extends Component {
   }
 
   render() {
-    const {gifs} = this.state
-    const {visible, modal, style, searchBoxStyle, gifStyle, placeholderText} = this.props
+    const { gifs } = this.state
+    const { visible, modal, style, searchBoxStyle, gifStyle, placeholderText, scrollComponent } = this.props
+
+    const Scroller = scrollComponent ? scrollComponent : GiphyWrapper;
+
     return (
       <Wrapper>
         <GiphyPickerWrapper visible={visible} modal={modal} style={style}>
@@ -114,7 +118,7 @@ export default class extends Component {
             value={this.state.searchValue}
             onKeyDown={this.onKeyDown.bind(this)}
             placeholder={placeholderText} style={searchBoxStyle} />
-          <GiphyWrapper>
+          <Scroller>
             {
               gifs.map((g, i) => {
                 let gifUrl = g.fixed_height.url
@@ -128,7 +132,7 @@ export default class extends Component {
                 )
               })
             }
-          </GiphyWrapper>
+          </Scroller>
         </GiphyPickerWrapper>
       </Wrapper>
     )
@@ -162,7 +166,7 @@ const GiphyWrapper = styled.div`
   justify-content: center;
   padding-left: 8px;
   padding-right: 8px;
-  overflow-y: scroll;
+  overflow-y: auto;
 `
 
 const Giphy = styled.img`

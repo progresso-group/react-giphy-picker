@@ -43,7 +43,8 @@ class TestComponent extends Component {
             modal={modal}
             style={{width: '400px', height: '400px'}}
             placeholderText="Suche GIFs"
-            />
+            scrollComponent={p => <div style={{overflowY: 'scroll'}}>{p.children}</div>}
+          />
           <span>Some other content that is partially coverted when modal mode<br />is turned on.</span>
         </div>
         <button onClick={this.toggleVisible.bind(this)}>toggle visibility</button>
