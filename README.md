@@ -42,25 +42,28 @@ ReactDOM.render(
 ### `apiKey` (required)
 Your giphy api key, see [API Quickstart Guide](https://developers.giphy.com/docs/api) on [developers.giphy.com](https://developers.giphy.com/).
 
-#### `onSelected` (required)
+### `width` (required)
+The width of the control, in pixels. Used for layouting gifs with different sizes.
+
+### `onSelected` (required)
 Handles a gif selection and provides the selected gif as a [Gif Object](https://developers.giphy.com/docs/api/schema#gif-object).
 
-#### `visible`
+### `visible`
 Set to `true` to make the component visible.
 
-#### `modal`
+### `modal`
 Set to `true`, if you want the component to be displayed as a floating layer. It will set the component `position: absolute` and add a box shadow.
 
-#### `style`
+### `style`
 A `React.CSSProperties` object that appies to the outer component shape.
 
-#### `searchBoxStyle`
+### `searchBoxStyle`
 A `React.CSSProperties` object that applies to the component's search box.
 
-#### `gifStyle`
+### `gifStyle`
 A `React.CSSProperties` object that applies to each rendered gif image within the component.
 
-#### `scrollComponent`
+### `scrollComponent`
 A `React.Component` that should be used for scrolling. If not provided, a default `<div />` with `overflow-y: auto` is used.
 
 ## Styles
