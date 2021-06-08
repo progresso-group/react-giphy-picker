@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import 'whatwg-fetch'
 
+import { makeCancelable } from './MakeCancelable';
 
 let nextSearchRequest = new Date();
 
@@ -14,11 +15,17 @@ export default class extends Component {
       searchValue: '',
       giphySearchUrl: 'https://api.giphy.com/v1/gifs/search?api_key=',
       giphyTrendingUrl: 'https://api.giphy.com/v1/gifs/trending?api_key='
-    }
+    };
   }
 
   componentDidMount() {
-    this.loadTrendingGifs()
+    this.loadTrendingGifs();
+  }
+
+  componentWillUnmount() {
+    if (this.cancelableLoad) {
+      this.cancelableLoad.cancel();
+    }
   }
 
   static get propTypes() {
@@ -33,7 +40,7 @@ export default class extends Component {
       gifStyle: PropTypes.object,
       placeholderText: PropTypes.string,
       scrollComponent: PropTypes.func
-    }
+    };
   }
 
   static get defaultProps() {
@@ -49,23 +56,29 @@ export default class extends Component {
   }
 
   loadTrendingGifs() {
-    const { giphyTrendingUrl} = this.state
+    const { giphyTrendingUrl} = this.state;
     const { apiKey } = this.props;
 
-    fetch (`${giphyTrendingUrl}${apiKey}`, {
-      method: 'get'
-    }).then((response) => {
-      return response.json()
-    }).then((response) => {
-      let gifs = response.data.map((g, i) => {return g.images})
-      gifs = this.orderToFit(gifs);
-      this.setState({gifs})
-    });
+    this.cancelableLoad = makeCancelable(fetch(`${giphyTrendingUrl}${apiKey}`, { method: 'get' }));
+
+    this.cancelableLoad.promise
+      .then((response) => {
+        return response.json();
+      }, () => {})
+      .then((response) => {
+        if (!response) {
+          return;
+        }
+        let gifs = response.data.map((g, i) => {return g.images});
+        gifs = this.orderToFit(gifs);
+        this.setState({gifs});
+      }, () => {}
+    );
   }
 
   searchGifs() {
     const { apiKey } = this.props;
-    const { giphySearchUrl, searchValue } = this.state
+    const { giphySearchUrl, searchValue } = this.state;
 
     const delay = 1000;
 
@@ -74,19 +87,17 @@ export default class extends Component {
     }
 
     const url = `${giphySearchUrl}${apiKey}&q=${searchValue.replace(' ', '+')}`;
-    
+
     nextSearchRequest = Date.now() + delay;
     setTimeout(() => {
       if (Date.now() >= nextSearchRequest) {
         this.setState({ gifs: [] });
-        fetch(url, {
-          method: 'get'
-        }).then((response) => {
-          return response.json()
-        }).then((response) => {
+        fetch(url, { method: 'get' })
+        .then((response) => { return response.json(); })
+        .then((response) => {
           let gifs = response.data.map((g, i) => {return g.images});
           gifs = this.orderToFit(gifs);
-          this.setState({gifs})
+          this.setState({gifs});
         });
       }
     }, delay);
@@ -131,28 +142,28 @@ export default class extends Component {
   }
 
   onGiphySelect (gif) {
-    this.props.onSelected(gif)
+    this.props.onSelected(gif);
   }
 
   onSearchChange (event) {
-    event.stopPropagation()
-    this.setState({searchValue: event.target.value}, () => this.searchGifs())
+    event.stopPropagation();
+    this.setState({searchValue: event.target.value}, () => this.searchGifs());
   }
 
   onKeyDown (event) {
     if (event.key === 'Escape') {
-      event.preventDefault()
-      this.reset()
+      event.preventDefault();
+      this.reset();
     }
   }
 
   reset () {
-    this.setState({searchValue: ''})
+    this.setState({searchValue: ''});
   }
 
   render() {
-    const { gifs } = this.state
-    const { visible, modal, style, width, searchBoxStyle, gifStyle, placeholderText, scrollComponent } = this.props
+    const { gifs } = this.state;
+    const { visible, modal, style, width, searchBoxStyle, gifStyle, placeholderText, scrollComponent } = this.props;
 
     const Scroller = scrollComponent ? scrollComponent : GiphyWrapper;
 
@@ -205,7 +216,7 @@ export default class extends Component {
 
 const Wrapper = styled.div`
   position: relative;
-`
+`;
 
 const GiphyPickerWrapper = styled.div`
   display: flex;
@@ -219,7 +230,7 @@ const GiphyPickerWrapper = styled.div`
   box-shadow: ${props => props.modal ? '3px 3px 5px #BFBDBD' : 'none'};
   height: 400px;
   z-index: 100;
-`
+`;
 
 const GiphyWrapper = styled.div`
   display: flex;
@@ -231,7 +242,7 @@ const GiphyWrapper = styled.div`
   padding-left: 8px;
   padding-right: 4px;
   overflow-y: auto;
-`
+`;
 
 const GiphyContainer = styled.div`
   cursor: pointer;
@@ -242,13 +253,13 @@ const GiphyContainer = styled.div`
   height: 100px;
   box-sizing: border-box;
   overflow: hidden;
-`
+`;
 
 const Giphy = styled.img`
   cursor: pointer;
   height: 100px;
   box-sizing: border-box;
-`
+`;
 
 const Input = styled.input`
   display: block;
@@ -269,4 +280,4 @@ const Input = styled.input`
     outline: none;
     border-color: #337ab7 !important;
   }
-`
+`;
