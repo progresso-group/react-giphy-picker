@@ -66,9 +66,6 @@ A `React.CSSProperties` object that applies to each rendered gif image within th
 ### `scrollComponent`
 A `React.Component` that should be used for scrolling. If not provided, a default `<div />` with `overflow-y: auto` is used.
 
-## Styles
-Uses styled-components 💅 for the base styling.
-
 ## Development
     yarn
     yarn dev

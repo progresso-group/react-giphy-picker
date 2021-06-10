@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import styled from 'styled-components'
 import 'whatwg-fetch'
 
 import { makeCancelable } from './MakeCancelable';
+import {
+  wrapperStyle,
+  giphyPickerWrapperStyle,
+  giphyWrapperStyle,
+  giphyContainerStyle,
+  giphyStyle,
+  inputStyle
+ } from './Styles';
 
 let nextSearchRequest = new Date();
 
@@ -165,15 +172,27 @@ export default class extends Component {
     const { gifs } = this.state;
     const { visible, modal, style, width, searchBoxStyle, gifStyle, placeholderText, scrollComponent } = this.props;
 
-    const Scroller = scrollComponent ? scrollComponent : GiphyWrapper;
+    const GiphyWrapper = p => <div style={giphyWrapperStyle}>{p.children}</div>;
 
+    const Scroller = scrollComponent ? scrollComponent : GiphyWrapper;
     const gifHeight = gifStyle ? gifStyle.height ? gifStyle.height : 100 : 100;
 
     return (
-      <Wrapper>
-        <GiphyPickerWrapper visible={visible} modal={modal} style={{...style, width: `${width}px`}}>
-          <Input
+      <div className="giphy-picker" styles={wrapperStyle}>
+        <style>{
+         `.search-box:hover {
+            border-color: rgba(51,122,183,.4);
+          }
+          .search-box:focus {
+            outline: none;
+            border-color: #337ab7 !important;
+          }`}
+        </style>
+        <div style={{...style, ...giphyPickerWrapperStyle(modal, visible), width: `${width}px`}}>
+          <input
             name="giphy-search"
+            className="search-box"
+            style={{...inputStyle, ...searchBoxStyle}}
             type="text"
             autoCapitalize="none"
             autoComplete="off"
@@ -182,7 +201,8 @@ export default class extends Component {
             onChange={this.onSearchChange.bind(this)}
             value={this.state.searchValue}
             onKeyDown={this.onKeyDown.bind(this)}
-            placeholder={placeholderText} style={searchBoxStyle} />
+            placeholder={placeholderText}
+          />
           <Scroller>
             {
               gifs.map((g, i) => {
@@ -192,92 +212,25 @@ export default class extends Component {
                 gifWidth -= (g.cutValue * 2);
 
                 return (
-                  <GiphyContainer
+                  <div
                     className="giphy-container-gif"
-                    style={{...gifStyle, width: gifWidth, height: height, backgroundColor: '#cccccc'}}
+                    style={{...giphyContainerStyle, ...gifStyle, width: gifWidth, height: height, backgroundColor: '#cccccc'}}
                     key={i}
                     onClick={() => {this.onGiphySelect(g)}}
                   >
-                    <Giphy
+                    <img
                       className="giphy-gif"
-                      style={{ marginLeft: `${-g.cutValue}px` }}
+                      style={{...giphyStyle, marginLeft: `${-g.cutValue}px` }}
                       src={gif.url}
                     />
-                  </GiphyContainer>
+                  </div>
                 );
               })
             }
           </Scroller>
-        </GiphyPickerWrapper>
-      </Wrapper>
+        </div>
+      </div>
     )
   }
 }
 
-const Wrapper = styled.div`
-  position: relative;
-`;
-
-const GiphyPickerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  position: ${props => props.modal ? 'absolute' : 'static'};
-  opacity: ${props => props.visible ? 1 : 0};
-  pointer-events: ${props => props.visible ? 'inherit' : 'none'};
-  transition: opacity 300ms linear;
-  border-radius: 2px;
-  background: white;
-  box-shadow: ${props => props.modal ? '3px 3px 5px #BFBDBD' : 'none'};
-  height: 400px;
-  z-index: 100;
-`;
-
-const GiphyWrapper = styled.div`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: stretch;
-  align-content: stretch;
-  justify-content: center;
-  padding-left: 8px;
-  padding-right: 4px;
-  overflow-y: auto;
-`;
-
-const GiphyContainer = styled.div`
-  cursor: pointer;
-  justify-content: center;
-  align-items: center;
-  margin-bottom: 4px;
-  margin-right: 4px;
-  height: 100px;
-  box-sizing: border-box;
-  overflow: hidden;
-`;
-
-const Giphy = styled.img`
-  cursor: pointer;
-  height: 100px;
-  box-sizing: border-box;
-`;
-
-const Input = styled.input`
-  display: block;
-  margin: 8px;
-  padding: 7px 9px 8px;
-  background-color: transparent;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  color: inherit;
-  height: auto;
-  line-height: 1.2;
-  
-  &:hover {
-    border-color: rgba(51,122,183,.4);
-  }
-
-  &:focus {
-    outline: none;
-    border-color: #337ab7 !important;
-  }
-`;
